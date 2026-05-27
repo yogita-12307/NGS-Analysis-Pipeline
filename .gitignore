@@ -1,0 +1,48 @@
+# Raw sequencing data
+# =========================
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.sra
+
+# Alignment files
+# =========================
+*.sam
+*.bam
+*.bai
+*.crai
+
+# Variant files (intermediate + large)
+# =========================
+*.vcf
+*.vcf.gz
+*.bcf
+
+# Index files
+# =========================
+*.fai
+*.bt2
+*.dict
+
+# Logs and temp files
+# =========================
+logs/
+*.log
+tmp/
+temp/
+
+# Pipeline artifacts
+# =========================
+results/
+.snakemake/
+
+# OS / system files
+# =========================
+.DS_Store
+Thumbs.db
+
+# Python cache (if scripts exist)
+# =========================
+__pycache__/
+*.pyc
