@@ -1,63 +1,107 @@
-##🧬 Whole Exome Sequencing (WES) Variant Calling Pipeline
+# 🧬 WES-BioPipeline: Human Whole Exome Sequencing Workflow
 
-##📌 Overview
+[![Linux](https://img.shields.io/badge/Platform-Linux-luc.svg?style=flat-shiled&logo=linux)](https://www.linux.org/)
+[![Bioinformatics](https://img.shields.io/badge/Domain-Bioinformatics-lightblue.svg)](#)
+[![Workflow](https://img.shields.io/badge/Pipeline-Manual--CLI-orange.svg)](#)
 
-This repository contains a reproducible bioinformatics workflow for analyzing Whole Exome Sequencing (WES) data from a human sample using standard NGS tools in a Linux environment.
+A reproducible, production-ready bioinformatics pipeline for analyzing human Whole Exome Sequencing (WES) data. This workflow processes raw Next-Generation Sequencing (NGS) reads from a Linux command-line environment, taking data from raw FASTQ format all the way to high-confidence Variant Call Files (VCF).
 
-The pipeline performs quality control, preprocessing, alignment, and variant calling using widely adopted command-line tools.
+---
 
-##📊 Dataset
-Accession ID: SRR24555538
-Organism: Homo sapiens
-Data Type: Whole Exome Sequencing (WES)
-Sequencing Type: Paired-end (Illumina)
-Biological Context: Stem cell-derived exome sample associated with a cystic fibrosis research context
+## 📊 Dataset Information
 
-##⚙️ Pipeline Workflow
+The pipeline is validated using a public dataset associated with stem cell-derived exome research in cystic fibrosis.
 
-The analysis workflow includes the following steps:
+| Attribute | Details |
+| :--- | :--- |
+| **Accession ID** | `SRR24555538` |
+| **Organism** | *Homo sapiens* |
+| **Data Type** | Whole Exome Sequencing (WES) |
+| **Sequencing Platform** | Illumina |
+| **Layout** | Paired-end |
 
-Raw data retrieval (SRA Toolkit)
-Quality control (FastQC)
-Adapter trimming and filtering (fastp)
-Read alignment to reference genome (Bowtie2)
-BAM file processing (SAMtools)
-Variant calling (BCFtools)
+---
+
+## 🔄 Workflow Summary
+
+```text
+  [ FASTQ ] ──> [ Quality Control ] ──> [ Trimming & Filtering ] 
+                                                   │
+  [ Variant Calling ] <── [ BAM Processing ] <── [ Alignment (hg38) ]
+          │
+      [ VCF ]
+
+# 2️⃣ Quality Control
+
+fastqc SRR24555538_1.fastq SRR24555538_2.fastq
+
+3️⃣ Read Trimming & Filtering
+fastp \
+  -i SRR24555538_1.fastq \
+  -I SRR24555538_2.fastq \
+  -o SRR24555538_1_trimmed.fastq \
+  -O SRR24555538_2_trimmed.fastq
+
+4️⃣ Alignment to Reference Genome
+bowtie2 \
+  -x hg38_index \
+  -1 SRR24555538_1_trimmed.fastq \
+  -2 SRR24555538_2_trimmed.fastq \
+  -S SRR24555538.sam
+
+5️⃣ BAM Processing
+samtools view -bS SRR24555538.sam > SRR24555538.bam
+samtools sort SRR24555538.bam -o SRR24555538_sorted.bam
+samtools index SRR24555538_sorted.bam
+
+6️⃣ Variant Calling
+bcftools mpileup -Ou -f hg38.fa SRR24555538_sorted.bam | bcftools call -mv -Ov -o SRR24555538.vcf
 🧬 Reference Genome
 
-The GRCh38/hg38 human reference genome is used for alignment.
-It is accessed from a shared server environment and linked into the project directory to ensure reproducibility.
+GRCh38 / hg38 (centrally indexed for reproducibility and storage efficiency in shared compute environments)
 
-##📁 Repository Structure
-config/          → configuration files and samplesheet
-docs/            → methods, parameters, and interpretation notes
-workflow/        → pipeline scripts and execution commands
-data/metadata/   → dataset description and sample information
-results/         → generated outputs (QC, BAM, VCF, reports)
+📁 Repository Structure
+.
+├── config/
+├── data/metadata/
+├── docs/
+├── results/
+└── workflow/
 
-##📦 Key Outputs
+📦 Outputs
 
-The pipeline generates the following results:
-
-Raw and processed quality control reports
+FastQC quality reports
 Trimmed FASTQ files
-Aligned BAM files
-Sorted and indexed BAM files
-Variant call file (VCF)
+SAM/BAM alignment files
+Sorted & indexed BAM files
+Final VCF variant calls
 
-##🧠 Notes on Reproducibility
-All tools are run in a Linux-based environment
-Steps are modular and can be executed independently
-Outputs are structured for downstream interpretation and extension
+🧠 Reproducibility & Portability
 
-##🚀 Future Improvements
+Linux/Unix native execution
+Modular stepwise pipeline design
+HPC-ready (Slurm/SGE compatible)
+Easy migration to Nextflow/Snakemake
+Clear input/output separation for each stage
+
+##🚀 *Future Roadmap*
 Variant annotation (VEP / ANNOVAR)
-Structural variant detection
-Multi-sample comparison workflow
-Pipeline automation using Snakemake or Nextflow
-Containerization using Docker for full reproducibility
-Variant annotation (VEP / ANNOVAR)
-Structural variant detection
-Multi-sample comparison workflow
-Pipeline automation using Snakemake or Nextflow
-Containerization using Docker for full reproducibility
+Structural variant detection (Manta, DELLY)
+Cohort-scale joint genotyping
+Full workflow automation (Nextflow / Snakemake)
+Containerization (Docker / Singularity)
+
+🏷️ Keywords
+
+#Bioinformatics #NGS #Genomics #VariantCalling #VCF #BAM #SAMtools #BCFtools #Bowtie2 #FastQC #Fastp #SRA #GRCh38 #WES #WholeExomeSequencing #ComputationalBiology #Pipeline #ReproducibleResearch #Linux #HPC #OpenSource
+
+
+
+
+
+
+
+
+
+
+      
