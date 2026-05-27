@@ -211,6 +211,4 @@ Execution time depends on:
 - Workflow automation using Snakemake or Nextflow
 - Docker containerization
 
-## 📜 License
 
-MIT License
