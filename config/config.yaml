@@ -1,0 +1,28 @@
+# Reference & Index
+# =========================
+
+reference: "data/reference/hg38.fa"
+bowtie2_index: "data/reference/hg38_index"
+
+# Sample Information
+# =========================
+
+sample_id: "SRR24555538"
+paired_end: true
+
+# Sequencing Type
+# =========================
+
+organism: "Homo sapiens"
+assay: "Whole Exome Sequencing (WES)"
+data_type: "Genomic DNA"
+
+# Computational Settings
+# =========================
+
+threads: 8
+
+# Output Directory
+# =========================
+
+output_dir: "results/"
